@@ -55,6 +55,9 @@ const contains = (a, b) => {
 export default (i, o, filter = () => true) => {
 	i = resolve(i)
 	o = resolve(o)
+	if (filter.constructor === RegExp) {
+		filter = ::filter.test
+	}
 	return contains(i, o)
 		? Promise.reject(new Error('output directory cannot be a child of input directory'))
 		: copy_dir(i, o, filter)

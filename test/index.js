@@ -41,7 +41,18 @@ describe('copy', () => {
 	)
 
 	it('should ignore children that do not pass the filter', () =>
-		copy('fixtures/a', 'fixtures/b', path => !/child-dir/.test(path)).then(() => {
+		copy('fixtures/a', 'fixtures/b', path => !/^child-dir$/.test(path)).then(() => {
+			expect('fixtures/b').to.be.a.directory()
+			expect('fixtures/b/asd.txt').to.be.a.file()
+				.and.have.content('abcd\n123\n')
+			expect('fixtures/b/child-dir').to.not.be.a.path()
+			expect('fixtures/b/empty-dir').to.be.a.directory()
+				.and.be.empty
+		})
+	)
+
+	it('should ignore children that do not pass the filter (regex)', () =>
+		copy('fixtures/a', 'fixtures/b', /^(child-dir.+|(?!child-dir).*)$/).then(() => {
 			expect('fixtures/b').to.be.a.directory()
 			expect('fixtures/b/asd.txt').to.be.a.file()
 				.and.have.content('abcd\n123\n')
