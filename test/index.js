@@ -2,7 +2,7 @@ import chai, { expect } from 'chai'
 import chai_fs from 'chai-fs'
 import chai_as_promised from 'chai-as-promised'
 import copy from '..'
-import { existsSync as exists, mkdirSync as mkdir, writeFileSync as write, readFileSync as read } from 'graceful-fs'
+import { existsSync as exists, mkdirSync as mkdir, writeFileSync as write, readFileSync as read, readlinkSync as rlink, symlinkSync as slink } from 'graceful-fs'
 import { sync as remove } from 'rimraf'
 import { sync as mkdirp } from 'mkdirp'
 
@@ -11,11 +11,14 @@ chai
 	.use(chai_as_promised)
 
 const setup = () => {
-	mkdirp('fixtures/a')
+	mkdirp('fixtures')
+	write('fixtures/z.txt', '123')
+	mkdir('fixtures/a')
 	write('fixtures/a/asd.txt', 'abcd\n123\n')
 	mkdir('fixtures/a/child-dir')
 	write('fixtures/a/child-dir/fgh.txt', 'qwerty\n!@#\n')
 	mkdir('fixtures/a/empty-dir')
+	slink('fixtures/z.txt', 'fixtures/a/z.lnk')
 }
 
 const cleanup = () => {
@@ -37,6 +40,8 @@ describe('copy', () => {
 				.and.have.content('qwerty\n!@#\n')
 			expect('fixtures/b/empty-dir').to.be.a.directory()
 				.and.be.empty
+			expect(rlink('fixtures/b/z.lnk')).to.be.a.file()
+				.and.have.content('123')
 		})
 	)
 
@@ -48,6 +53,8 @@ describe('copy', () => {
 			expect('fixtures/b/child-dir').to.not.be.a.path()
 			expect('fixtures/b/empty-dir').to.be.a.directory()
 				.and.be.empty
+			expect(rlink('fixtures/b/z.lnk')).to.be.a.file()
+				.and.have.content('123')
 		})
 	)
 
@@ -59,6 +66,8 @@ describe('copy', () => {
 			expect('fixtures/b/child-dir').to.not.be.a.path()
 			expect('fixtures/b/empty-dir').to.be.a.directory()
 				.and.be.empty
+			expect(rlink('fixtures/b/z.lnk')).to.be.a.file()
+				.and.have.content('123')
 		})
 	)
 

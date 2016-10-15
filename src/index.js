@@ -1,6 +1,6 @@
 import { join, resolve, sep } from 'path'
 import { createReadStream as reads, createWriteStream as writes } from 'graceful-fs'
-import { mkdir, readdir as ls, stat, symlink as copy_link } from 'fs-promise'
+import { mkdir, readdir as ls, lstat, readlink, symlink } from 'fs-promise'
 
 const P = f => new Promise(f)
 
@@ -10,12 +10,12 @@ const mkdirp = dir =>
 	})
 
 const copy_child = (i, o, filter) =>
-	stat(i).then(s => (
+	lstat(i).then(s => (
 		s.isDirectory()
 			? copy_dir
-		: s.isFile() || s.isCharacterDevice() || s.isBlockDevice()
-			? copy_file
-			: copy_link
+		: s.isSymbolicLink()
+			? copy_link
+			: copy_file
 	)(i, o, filter))
 
 const copy_children = (i, o, children, filter) =>
@@ -40,6 +40,8 @@ const copy_file = (i, o) =>
 	
 		r.pipe(w)
 	})
+
+const copy_link = (i, o) => readlink(i).then(link => symlink(link, o))
 
 const contains = (a, b) => {
 	a = a.split(sep)
