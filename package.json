@@ -1,0 +1,50 @@
+{
+  "name": "clean-copy",
+  "version": "0.0.1",
+  "description": "Recursively copy while ignoring certain directories (e.g. node_modules)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require babel-register",
+    "lint": "eslint src",
+    "build": "babel src --out-dir lib",
+	"final": "npm run lint && npm run build && npm run test",
+    "dev": "babel src --out-dir lib -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edge/clean-copy.git"
+  },
+  "keywords": [
+    "fs",
+    "copy",
+    "node_modules",
+    "clean",
+    "ignore",
+    "recursive",
+    "test",
+    "filter"
+  ],
+  "author": "synchronous",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edge/clean-copy/issues"
+  },
+  "homepage": "https://github.com/edge/clean-copy#readme",
+  "devDependencies": {
+    "babel-eslint": "^7.0.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.16.3",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chai-fs": "^0.1.0",
+    "eslint": "^3.8.0",
+    "mkdirp": "^0.5.1",
+    "mocha": "^3.1.2",
+    "rimraf": "^2.5.4"
+  },
+  "dependencies": {
+    "fs-promise": "^0.5.0",
+    "graceful-fs": "^4.1.9"
+  }
+}
