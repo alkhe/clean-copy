@@ -1,13 +1,13 @@
 {
   "name": "clean-copy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Recursively copy while ignoring certain directories (e.g. node_modules)",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require babel-register",
     "lint": "eslint src",
     "build": "babel src --out-dir lib",
-	"final": "npm run lint && npm run build && npm run test",
+    "final": "npm run lint && npm run build && npm run test",
     "dev": "babel src --out-dir lib -w"
   },
   "repository": {
